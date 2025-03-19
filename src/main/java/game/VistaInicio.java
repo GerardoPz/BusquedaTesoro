@@ -11,13 +11,14 @@ public class VistaInicio extends JFrame {
     private JCheckBox checkMaquina;
     private Jugador jugador1;
     private Jugador jugador2;
+    private String placeHolder = "Jugador";
 
     public VistaInicio() {
         setTitle("Juego");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-        String rutaImagen = "C:\\Users\\Lu\\IdeaProjects\\Busqueda\\src\\main\\java\\imagenesBackgroundCarta\\fondoDiaJuego.jpg";
+        String rutaImagen = "C:\\Users\\Lu\\IdeaProjects\\Busqueda\\src\\main\\java\\imagenesBackgroundCarta\\fondoNocheJuego.jpg";
         ImageIcon imageIcon = new ImageIcon(rutaImagen);
         Image image = imageIcon.getImage();
 
@@ -54,7 +55,9 @@ public class VistaInicio extends JFrame {
         panelCentral.setBackground(new Color(0, 0, 0, 150));
         panelCentral.setLayout(new GridLayout(1, 2, 20, 0));
 
-        JPanel jugador1Panel = crearPanelJugador("Jugador 1", "Nombre del jugador 1");
+
+
+        JPanel jugador1Panel = crearPanelJugador("Jugador 1", placeHolder);
         panelCentral.add(jugador1Panel);
 
         JPanel jugador2Panel = crearPanelJugador("Jugador 2", "Nombre del jugador 2");
@@ -78,8 +81,11 @@ public class VistaInicio extends JFrame {
         btnIniciar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (jugador1.getPersonaje() != null && jugador2.getPersonaje() != null) {
-                    iniciarJuego();
+                System.out.println(jugador1.getPersonaje());
+                if (jugador1.getPersonaje() != null && jugador2.getPersonaje() != null && jugador1.getNombreJugador() != null) {
+                    Jugador j1 = new Jugador(nombreJugador1.getText(), jugador1.getPersonaje());
+                    Jugador j2 = new Jugador(nombreJugador2.getText(), jugador2.getPersonaje());
+                    iniciarJuego(j1, j2);
                 } else {
                     JOptionPane.showMessageDialog(null, "Ambos jugadores deben elegir un personaje.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
@@ -121,6 +127,7 @@ public class VistaInicio extends JFrame {
         panelJugador.add(btnElegirPersonaje, gbc);
 
         JTextField nombreJugador = new JTextField(nombrePlaceholder);
+
         nombreJugador.setPreferredSize(new Dimension(200, 30));
         panelJugador.add(nombreJugador, gbc);
 
@@ -165,19 +172,44 @@ public class VistaInicio extends JFrame {
         frame.setVisible(true);
     }
 
-    private void iniciarJuego() {
-        String nombre1 = jugador1.getNombreJugador();
-        String nombre2 = jugador2.getNombreJugador();
+    private void iniciarJuego(Jugador jugador1, Jugador jugador2) {
         boolean jugarConMaquina = checkMaquina.isSelected();
 
-        System.out.println("Jugador 1: " + nombre1);
-        System.out.println("Personaje: " + jugador1.getPersonaje());
+        JFrame frame = new JFrame("Información del Juego");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setSize(400, 300);
 
-        System.out.println("Jugador 2: " + nombre2);
-        System.out.println("Personaje: " + jugador2.getPersonaje());
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBackground(new Color(0, 0, 0, 150));
 
-        System.out.println("Jugar con Maquina: " + (jugarConMaquina ? "Sí" : "No"));
+        JLabel label1 = new JLabel("Jugador 1: " + jugador1.getNombreJugador());
+        label1.setForeground(Color.WHITE);
+        label1.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(label1);
 
+        JLabel personajeLabel1 = new JLabel("Personaje: " + jugador1.getPersonaje());
+        personajeLabel1.setForeground(Color.WHITE);
+        personajeLabel1.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(personajeLabel1);
+
+        JLabel label2 = new JLabel("Jugador 2: " + jugador2.getNombreJugador());
+        label2.setForeground(Color.WHITE);
+        label2.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(label2);
+
+        JLabel personajeLabel2 = new JLabel("Personaje: " + jugador2.getPersonaje());
+        personajeLabel2.setForeground(Color.WHITE);
+        personajeLabel2.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(personajeLabel2);
+
+        JLabel labelMaquina = new JLabel("Jugar con Maquina: " + (jugarConMaquina ? "Sí" : "No"));
+        labelMaquina.setForeground(Color.WHITE);
+        labelMaquina.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(labelMaquina);
+
+        frame.add(panel);
+        frame.setVisible(true);
     }
 
     public static void main(String[] args) {

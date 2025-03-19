@@ -3,14 +3,14 @@ package game;
 import javax.swing.*;
 import java.awt.*;
 
-public class BarajaMazo {
+public class CartaMazo {
     private String nombreBaraja;
     private Image backgroundCarta;
     private Image imagen;
     private String acertijo;
     private int numeroCasillasPosibles;
 
-    public BarajaMazo(String nombreBaraja, String backgroundCarta, String imagen, String acertijo, int numeroCasillasPosibles) {
+    public CartaMazo(String nombreBaraja, String backgroundCarta, String imagen, String acertijo, int numeroCasillasPosibles) {
         this.nombreBaraja = nombreBaraja;
         this.backgroundCarta = new ImageIcon(backgroundCarta).getImage();
         this.imagen = new ImageIcon(imagen).getImage();
