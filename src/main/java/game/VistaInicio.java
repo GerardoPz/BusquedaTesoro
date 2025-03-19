@@ -173,6 +173,12 @@ public class VistaInicio extends JFrame {
     }
 
     private void iniciarJuego(Jugador jugador1, Jugador jugador2) {
+        this.dispose();
+        VistaJuego juego = new VistaJuego(jugador1, jugador2);
+        System.out.println(jugador1.getNombreJugador());
+        System.out.println(jugador2.getNombreJugador());
+        juego.setVisible(true);
+        /*
         boolean jugarConMaquina = checkMaquina.isSelected();
 
         JFrame frame = new JFrame("Información del Juego");
@@ -210,6 +216,7 @@ public class VistaInicio extends JFrame {
 
         frame.add(panel);
         frame.setVisible(true);
+        */
     }
 
     public static void main(String[] args) {
