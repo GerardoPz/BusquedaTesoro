@@ -11,7 +11,7 @@ public class VistaJuego extends JFrame {
     private static final int TAMANO_TABLERO = 100;
     private static final int FILAS = 10;
     private static final int COLUMNAS = 10;
-    private static final int ANCHO_CELDA = 30;
+    private static final int ANCHO_CELDA = 15;
     private static final int ALTO_CELDA = 30;
     private static final Random random = new Random();
     private int posicionJugador1 = 0;
@@ -60,9 +60,11 @@ public class VistaJuego extends JFrame {
         JPanel panelIzquierda = new JPanel();
         panelIzquierda.setLayout(new BoxLayout(panelIzquierda, BoxLayout.Y_AXIS));
         JLabel cartaVolteada = new JLabel();
-        cartaVolteada.setPreferredSize(new Dimension(100, 150));
+        cartaVolteada.setPreferredSize(new Dimension(300, 150));
         cartaVolteada.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         JButton botonProbarSuerte = new JButton("Probar Suerte");
+
+        etiquetaJugador1.setText("Jugador " + jugador1.getNombreJugador() + " : " + posicionJugador1);
 
         panelIzquierda.add(cartaVolteada);
         panelIzquierda.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -73,7 +75,7 @@ public class VistaJuego extends JFrame {
         add(panelIzquierda, BorderLayout.WEST);
 
         JPanel panelDerecha = new JPanel();
-        panelDerecha.setPreferredSize(new Dimension(100, 150));
+        panelDerecha.setPreferredSize(new Dimension(300, 150));
         panelDerecha.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
         add(panelDerecha, BorderLayout.EAST);
@@ -115,7 +117,7 @@ public class VistaJuego extends JFrame {
 
         if (jugador == 1) {
             posicionJugador1 = nuevaPosicion;
-            etiquetaJugador1.setText("Jugador " + jugador1.getNombreJugador() + " : " + posicionJugador1);
+
         } else {
             posicionJugador2 = nuevaPosicion;
             etiquetaJugador2.setText("Jugador " + jugador2.getNombreJugador() + " : " + posicionJugador2);
