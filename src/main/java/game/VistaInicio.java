@@ -220,6 +220,11 @@ public class VistaInicio extends JFrame {
     }
 
     public static void main(String[] args) {
+
+        //Musica musica = new Musica("");
+
+        //musica.start();
+
         new VistaInicio();
     }
 }
