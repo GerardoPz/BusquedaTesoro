@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.nio.file.Paths;
 
 public class VistaInicio extends JFrame {
     private JTextField nombreJugador1;
@@ -20,9 +21,10 @@ public class VistaInicio extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-        String rutaImagen = "C:\\Users\\Lu\\IdeaProjects\\Busqueda\\src\\main\\java\\imagenesBackgroundCarta\\fondoNocheJuego.jpg";
+        String ruta = ruta();
+        String rutaImagen = ruta + "\\src\\main\\java\\fondosJuego\\fondoDia.jpg";
         ImageIcon imageIcon = new ImageIcon(rutaImagen);
-        Image image = imageIcon.getImage();
+        Image image = imageIcon.getImage().getScaledInstance(1500, 1500, Image.SCALE_SMOOTH);
 
         JPanel backgroundPanel = new JPanel() {
             @Override
@@ -34,7 +36,6 @@ public class VistaInicio extends JFrame {
         backgroundPanel.setLayout(new BorderLayout());
 
         JPanel seccionCentro = new JPanel(new GridBagLayout());
-        seccionCentro.setOpaque(false);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -46,7 +47,7 @@ public class VistaInicio extends JFrame {
 
         JPanel panelCentral = new JPanel();
         panelCentral.setPreferredSize(new Dimension(800, 400));
-        panelCentral.setBackground(new Color(0, 0, 0, 150));
+        panelCentral.setBackground(new Color(0, 0, 0, 0));
         panelCentral.setLayout(new GridLayout(1, 2, 20, 0));
 
         panelCentral.add(crearPanelJugador("Jugador 1", placeHolder));
@@ -82,6 +83,12 @@ public class VistaInicio extends JFrame {
 
         setContentPane(backgroundPanel);
         setVisible(true);
+    }
+
+    public String ruta (){
+        String rutaActual = System.getProperty("user.dir");
+        String rutaEspecifica = String.valueOf(Paths.get(rutaActual));
+        return rutaEspecifica;
     }
 
     private JPanel crearPanelJugador(String titulo, String nombrePlaceholder) {
@@ -141,13 +148,13 @@ public class VistaInicio extends JFrame {
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g;
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(new Color(50, 150, 250));
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 30, 30);
+                g2.setColor(new Color(210, 244, 145));
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 50, 50);
                 super.paintComponent(g);
             }
         };
         boton.setFont(new Font("Arial", Font.BOLD, tamanoFuente));
-        boton.setForeground(Color.WHITE);
+        boton.setForeground(Color.BLACK);
         boton.setFocusPainted(false);
         boton.setContentAreaFilled(false);
         boton.setBorderPainted(false);
