@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class VistaInicio extends JFrame {
     private JTextField nombreJugador1;
@@ -31,14 +33,6 @@ public class VistaInicio extends JFrame {
         };
         backgroundPanel.setLayout(new BorderLayout());
 
-        JPanel seccionBtnMusica = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        seccionBtnMusica.setOpaque(false);
-        JButton btnMusica = new JButton("M");
-        btnMusica.setFont(new Font("Arial", Font.BOLD, 20));
-        seccionBtnMusica.add(btnMusica);
-
-        backgroundPanel.add(seccionBtnMusica, BorderLayout.NORTH);
-
         JPanel seccionCentro = new JPanel(new GridBagLayout());
         seccionCentro.setOpaque(false);
 
@@ -55,13 +49,8 @@ public class VistaInicio extends JFrame {
         panelCentral.setBackground(new Color(0, 0, 0, 150));
         panelCentral.setLayout(new GridLayout(1, 2, 20, 0));
 
-
-
-        JPanel jugador1Panel = crearPanelJugador("Jugador 1", placeHolder);
-        panelCentral.add(jugador1Panel);
-
-        JPanel jugador2Panel = crearPanelJugador("Jugador 2", "Nombre del jugador 2");
-        panelCentral.add(jugador2Panel);
+        panelCentral.add(crearPanelJugador("Jugador 1", placeHolder));
+        panelCentral.add(crearPanelJugador("Jugador 2", "Nombre del jugador 2"));
 
         seccionCentro.add(panelCentral, gbc);
 
@@ -75,20 +64,14 @@ public class VistaInicio extends JFrame {
         checkMaquina.setAlignmentX(Component.CENTER_ALIGNMENT);
         botonesJuego.add(checkMaquina);
 
-        JButton btnIniciar = new JButton("Iniciar Juego");
-        btnIniciar.setFont(new Font("Arial", Font.BOLD, 24));
+        JButton btnIniciar = crearBoton("Iniciar Juego", 24);
         btnIniciar.setAlignmentX(Component.CENTER_ALIGNMENT);
-        btnIniciar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println(jugador1.getPersonaje());
-                if (jugador1.getPersonaje() != null && jugador2.getPersonaje() != null && jugador1.getNombreJugador() != null) {
-                    Jugador j1 = new Jugador(nombreJugador1.getText(), jugador1.getPersonaje());
-                    Jugador j2 = new Jugador(nombreJugador2.getText(), jugador2.getPersonaje());
-                    iniciarJuego(j1, j2);
-                } else {
-                    JOptionPane.showMessageDialog(null, "Ambos jugadores deben elegir un personaje.", "Error", JOptionPane.ERROR_MESSAGE);
-                }
+        btnIniciar.addActionListener(e -> {
+            if (jugador1.getPersonaje() != null && jugador2.getPersonaje() != null) {
+                iniciarJuego(new Jugador(nombreJugador1.getText(), jugador1.getPersonaje()),
+                        new Jugador(nombreJugador2.getText(), jugador2.getPersonaje()));
+            } else {
+                JOptionPane.showMessageDialog(null, "Ambos jugadores deben elegir un personaje.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
         botonesJuego.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -103,7 +86,7 @@ public class VistaInicio extends JFrame {
 
     private JPanel crearPanelJugador(String titulo, String nombrePlaceholder) {
         JPanel panelJugador = new JPanel(new GridBagLayout());
-        panelJugador.setOpaque(false); // Hacer el panel transparente
+        panelJugador.setOpaque(false);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -113,22 +96,32 @@ public class VistaInicio extends JFrame {
 
         JLabel jugadorLabel = new JLabel(titulo);
         jugadorLabel.setForeground(Color.WHITE);
-        jugadorLabel.setHorizontalAlignment(SwingConstants.CENTER);
         panelJugador.add(jugadorLabel, gbc);
 
-        JButton btnElegirPersonaje = new JButton("Elegir personaje");
-        btnElegirPersonaje.setPreferredSize(new Dimension(100, 100));
-        btnElegirPersonaje.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                elegirPersonaje(titulo);
-            }
-        });
+        JButton btnElegirPersonaje = crearBoton("Elegir personaje", 18);
+        btnElegirPersonaje.addActionListener(e -> elegirPersonaje(titulo));
         panelJugador.add(btnElegirPersonaje, gbc);
 
         JTextField nombreJugador = new JTextField(nombrePlaceholder);
-
         nombreJugador.setPreferredSize(new Dimension(200, 30));
+        nombreJugador.setForeground(Color.GRAY);
+        nombreJugador.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (nombreJugador.getText().equals(nombrePlaceholder)) {
+                    nombreJugador.setText("");
+                    nombreJugador.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (nombreJugador.getText().isEmpty()) {
+                    nombreJugador.setText(nombrePlaceholder);
+                    nombreJugador.setForeground(Color.GRAY);
+                }
+            }
+        });
         panelJugador.add(nombreJugador, gbc);
 
         if (titulo.equals("Jugador 1")) {
@@ -140,6 +133,26 @@ public class VistaInicio extends JFrame {
         }
 
         return panelJugador;
+    }
+
+    private JButton crearBoton(String texto, int tamanoFuente) {
+        JButton boton = new JButton(texto) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g;
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(new Color(50, 150, 250));
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 30, 30);
+                super.paintComponent(g);
+            }
+        };
+        boton.setFont(new Font("Arial", Font.BOLD, tamanoFuente));
+        boton.setForeground(Color.WHITE);
+        boton.setFocusPainted(false);
+        boton.setContentAreaFilled(false);
+        boton.setBorderPainted(false);
+        boton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        return boton;
     }
 
     private void elegirPersonaje(String jugador) {
@@ -171,6 +184,7 @@ public class VistaInicio extends JFrame {
         frame.add(panel);
         frame.setVisible(true);
     }
+
 
     private void iniciarJuego(Jugador jugador1, Jugador jugador2) {
         this.dispose();
