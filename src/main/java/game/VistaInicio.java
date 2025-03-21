@@ -15,13 +15,14 @@ public class VistaInicio extends JFrame {
     private Jugador jugador1;
     private Jugador jugador2;
     private String placeHolder = "Jugador";
+    private String ruta = ruta();
+    private Musica musica = new Musica(ruta() + "\\src\\main\\java\\audios\\instrumental.wav");
 
     public VistaInicio() {
         setTitle("Juego");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-        String ruta = ruta();
         String rutaImagen = ruta + "\\src\\main\\java\\fondosJuego\\fondoDia.jpg";
         ImageIcon imageIcon = new ImageIcon(rutaImagen);
         Image image = imageIcon.getImage().getScaledInstance(1500, 1500, Image.SCALE_SMOOTH);
@@ -34,6 +35,25 @@ public class VistaInicio extends JFrame {
             }
         };
         backgroundPanel.setLayout(new BorderLayout());
+
+        JPanel seccionBtnMusica = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        seccionBtnMusica.setOpaque(false);
+        JButton btnMusica = new JButton("M");
+        musica.start();
+        btnMusica.addActionListener(e -> {
+            musica.toggleMusic();
+            System.out.println("Estas presionando");
+            if(btnMusica.getText().equals("M")) {
+                System.out.println("Vas a pararla");
+                btnMusica.setText("UM");
+            } else {
+                btnMusica.setText("M");
+            }
+        });
+        btnMusica.setFont(new Font("Arial", Font.BOLD, 20));
+        seccionBtnMusica.add(btnMusica);
+
+        backgroundPanel.add(seccionBtnMusica, BorderLayout.NORTH);
 
         JPanel seccionCentro = new JPanel(new GridBagLayout());
 
@@ -199,53 +219,9 @@ public class VistaInicio extends JFrame {
         System.out.println(jugador1.getNombreJugador());
         System.out.println(jugador2.getNombreJugador());
         juego.setVisible(true);
-        /*
-        boolean jugarConMaquina = checkMaquina.isSelected();
-
-        JFrame frame = new JFrame("Información del Juego");
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(400, 300);
-
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBackground(new Color(0, 0, 0, 150));
-
-        JLabel label1 = new JLabel("Jugador 1: " + jugador1.getNombreJugador());
-        label1.setForeground(Color.WHITE);
-        label1.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panel.add(label1);
-
-        JLabel personajeLabel1 = new JLabel("Personaje: " + jugador1.getPersonaje());
-        personajeLabel1.setForeground(Color.WHITE);
-        personajeLabel1.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panel.add(personajeLabel1);
-
-        JLabel label2 = new JLabel("Jugador 2: " + jugador2.getNombreJugador());
-        label2.setForeground(Color.WHITE);
-        label2.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panel.add(label2);
-
-        JLabel personajeLabel2 = new JLabel("Personaje: " + jugador2.getPersonaje());
-        personajeLabel2.setForeground(Color.WHITE);
-        personajeLabel2.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panel.add(personajeLabel2);
-
-        JLabel labelMaquina = new JLabel("Jugar con Maquina: " + (jugarConMaquina ? "Sí" : "No"));
-        labelMaquina.setForeground(Color.WHITE);
-        labelMaquina.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panel.add(labelMaquina);
-
-        frame.add(panel);
-        frame.setVisible(true);
-        */
     }
 
     public static void main(String[] args) {
-
-        //Musica musica = new Musica("");
-
-        //musica.start();
-
         new VistaInicio();
     }
 }

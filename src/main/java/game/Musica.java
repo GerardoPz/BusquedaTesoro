@@ -6,6 +6,7 @@ import java.io.IOException;
 public class Musica extends Thread {
     private Clip clip;
     private String filePath;
+    private boolean isPlaying = true;
 
     public Musica(String filePath) {
         this.filePath = filePath;
@@ -31,11 +32,17 @@ public class Musica extends Thread {
         }
     }
 
-    public void stopMusic() {
-        if (clip != null) {
-            clip.stop();
-            clip.close();
-        }
-    }
-}
 
+    public void toggleMusic(){
+        if(isPlaying){
+            clip.stop();
+        }
+        else{
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
+            clip.start();
+        }
+        isPlaying = !isPlaying;
+
+    }
+
+}

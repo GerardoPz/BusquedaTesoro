@@ -24,7 +24,6 @@ public class VistaJuego extends JFrame {
     private Jugador jugador1;
     private Jugador jugador2;
 
-
     public VistaJuego(Jugador jugador1, Jugador jugador2) {
         this.jugador1 = jugador1;
         this.jugador2 = jugador2;
@@ -183,6 +182,4 @@ public class VistaJuego extends JFrame {
         etiquetaJugador2.setText("Jugador 2: 0");
         actualizarTablero();
     }
-
-
 }
