@@ -43,6 +43,8 @@ public class VistaInicio extends JFrame {
 
         botonImagen.addActionListener(e -> {
             musica.toggleMusic();
+            this.dispose();
+            new VistaSeleccionJugadores(musica);
         });
 
         JPanel centerPanel = new JPanel(new GridBagLayout());
