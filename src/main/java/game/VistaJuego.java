@@ -37,6 +37,7 @@ public class VistaJuego extends JFrame {
         setTitle("Juego de Tablero Simple");
         setSize(ANCHO_CELDA * COLUMNAS + 300, ALTO_CELDA * FILAS + 100);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setLayout(new BorderLayout());
     }
 
@@ -46,14 +47,47 @@ public class VistaJuego extends JFrame {
             for (int j = 0; j < COLUMNAS; j++) {
                 int numeroCelda = i * COLUMNAS + j + 1;
                 String textoCelda = (numeroCelda == 1) ? "Inicio" : (numeroCelda == TAMANO_TABLERO) ? "Fin" : String.valueOf(numeroCelda);
-                celdas[i][j] = new JLabel(textoCelda, SwingConstants.CENTER);
-                celdas[i][j].setBorder(BorderFactory.createLineBorder(Color.BLACK));
-                celdas[i][j].setOpaque(true);
-                panelTablero.add(celdas[i][j]);
+
+                // Crear la etiqueta de la celda
+                JLabel celda = new JLabel(textoCelda, SwingConstants.CENTER);
+                celda.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                celda.setOpaque(false);
+                celda.setFont(new Font("Arial", Font.BOLD, 18));
+                celda.setForeground(Color.BLACK);
+
+                // Asignar la celda a la matriz
+                celdas[i][j] = celda;
+
+                // Cargar una imagen diferente para la celda 100
+                ImageIcon icono;
+                if (numeroCelda == TAMANO_TABLERO) {
+                    icono = new ImageIcon("C:\\Users\\Lu\\IdeaProjects\\BusquedaTesoro\\src\\main\\java\\imagenes\\tesoro.png");
+                } else {
+                    icono = new ImageIcon("C:\\Users\\Lu\\IdeaProjects\\BusquedaTesoro\\src\\main\\java\\fondosJuego\\fondoPisoBlanco.jpg");
+                }
+
+                Image imagenEscalada = icono.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+
+                // Crear un panel que combina imagen y texto
+                JPanel panelCelda = new JPanel() {
+                    @Override
+                    protected void paintComponent(Graphics g) {
+                        super.paintComponent(g);
+                        g.drawImage(imagenEscalada, 0, 0, getWidth(), getHeight(), this);
+                    }
+                };
+
+                panelCelda.setLayout(new BorderLayout());
+                panelCelda.add(celda, BorderLayout.CENTER);
+
+                // Agregar al tablero
+                panelTablero.add(panelCelda);
             }
         }
         add(panelTablero, BorderLayout.CENTER);
     }
+
+
 
     private void configurarPaneles() {
         JPanel panelIzquierda = new JPanel();
