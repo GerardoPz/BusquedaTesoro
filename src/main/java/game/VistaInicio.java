@@ -12,7 +12,7 @@ public class VistaInicio extends JFrame {
         setTitle("Juego");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-
+        setSize(700, 500);
         musica.start();
 
         String rutaImagen = ruta + "\\src\\main\\java\\fondosJuego\\fondoDia.jpg";
@@ -28,7 +28,7 @@ public class VistaInicio extends JFrame {
         };
         backgroundPanel.setLayout(new BorderLayout());
 
-        ImageIcon icono = new ImageIcon(ruta + "\\src\\main\\java\\botones\\prueba.png");
+        ImageIcon icono = new ImageIcon(ruta + "\\src\\main\\java\\botones\\iniciarJuego.png");
         Image imgEscalada = icono.getImage().getScaledInstance(350, 200, Image.SCALE_SMOOTH);
         ImageIcon iconoEscalado = new ImageIcon(imgEscalada);
 
