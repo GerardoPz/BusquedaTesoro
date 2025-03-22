@@ -28,6 +28,39 @@ public class VistaInicio extends JFrame {
         };
         backgroundPanel.setLayout(new BorderLayout());
 
+        JPanel seccionBtnMusica = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        seccionBtnMusica.setOpaque(false);
+
+        ImageIcon iconoAltavoz = new ImageIcon(ruta + "\\src\\main\\java\\imagenes\\altavoz.png");
+        Image imgAltavozEscalada = iconoAltavoz.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        ImageIcon iconoAltavozEscalado = new ImageIcon(imgAltavozEscalada);
+
+        ImageIcon iconoMute = new ImageIcon(ruta + "\\src\\main\\java\\imagenes\\mute.png");
+        Image imgMuteEscalada = iconoMute.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        ImageIcon iconoMuteEscalado = new ImageIcon(imgMuteEscalada);
+
+        JButton btnMusica = new JButton(iconoAltavozEscalado);
+
+        btnMusica.setBorderPainted(false);
+        btnMusica.setContentAreaFilled(false);
+        btnMusica.setFocusPainted(false);
+        btnMusica.setOpaque(false);
+
+        btnMusica.addActionListener(e -> {
+            musica.toggleMusic();
+            System.out.println("Estas presionando");
+            if(btnMusica.getIcon().equals(iconoAltavozEscalado)) {
+                System.out.println("Vas a pararla");
+                btnMusica.setIcon(iconoMuteEscalado);
+            } else {
+                btnMusica.setIcon(iconoAltavozEscalado);
+            }
+        });
+
+        seccionBtnMusica.add(btnMusica);
+
+        backgroundPanel.add(seccionBtnMusica, BorderLayout.NORTH);
+
         ImageIcon icono = new ImageIcon(ruta + "\\src\\main\\java\\botones\\iniciarJuego.png");
         Image imgEscalada = icono.getImage().getScaledInstance(350, 200, Image.SCALE_SMOOTH);
         ImageIcon iconoEscalado = new ImageIcon(imgEscalada);
@@ -51,12 +84,13 @@ public class VistaInicio extends JFrame {
         centerPanel.setOpaque(false);
         centerPanel.add(botonImagen);
 
+
         backgroundPanel.add(centerPanel, BorderLayout.SOUTH);
         setContentPane(backgroundPanel);
         setVisible(true);
     }
 
-    public String ruta() {
+    public static String ruta() {
         String rutaActual = System.getProperty("user.dir");
         return String.valueOf(Paths.get(rutaActual));
     }

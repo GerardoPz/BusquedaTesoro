@@ -14,6 +14,7 @@ public class VistaSeleccionJugadores extends JFrame {
     private Jugador jugador1;
     private Jugador jugador2;
     private String placeHolder = "Jugador";
+    private String ruta = VistaInicio.ruta();
 
     public VistaSeleccionJugadores(Musica musica) {
         musica.toggleMusic();
@@ -39,18 +40,33 @@ public class VistaSeleccionJugadores extends JFrame {
 
         JPanel seccionBtnMusica = new JPanel(new FlowLayout(FlowLayout.LEFT));
         seccionBtnMusica.setOpaque(false);
-        JButton btnMusica = new JButton("M");
+
+        ImageIcon iconoAltavoz = new ImageIcon(ruta + "\\src\\main\\java\\imagenes\\altavoz.png");
+        Image imgAltavozEscalada = iconoAltavoz.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        ImageIcon iconoAltavozEscalado = new ImageIcon(imgAltavozEscalada);
+
+        ImageIcon iconoMute = new ImageIcon(ruta + "\\src\\main\\java\\imagenes\\mute.png");
+        Image imgMuteEscalada = iconoMute.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        ImageIcon iconoMuteEscalado = new ImageIcon(imgMuteEscalada);
+
+        JButton btnMusica = new JButton(iconoAltavozEscalado);
+
+        btnMusica.setBorderPainted(false);
+        btnMusica.setContentAreaFilled(false);
+        btnMusica.setFocusPainted(false);
+        btnMusica.setOpaque(false);
+
         btnMusica.addActionListener(e -> {
             musica.toggleMusic();
             System.out.println("Estas presionando");
-            if(btnMusica.getText().equals("M")) {
+            if(btnMusica.getIcon().equals(iconoAltavozEscalado)) {
                 System.out.println("Vas a pararla");
-                btnMusica.setText("UM");
+                btnMusica.setIcon(iconoMuteEscalado);
             } else {
-                btnMusica.setText("M");
+                btnMusica.setIcon(iconoAltavozEscalado);
             }
         });
-        btnMusica.setFont(new Font("Arial", Font.BOLD, 20));
+
         seccionBtnMusica.add(btnMusica);
 
         backgroundPanel.add(seccionBtnMusica, BorderLayout.NORTH);
@@ -228,4 +244,6 @@ public class VistaSeleccionJugadores extends JFrame {
         System.out.println(jugador2.getPersonaje());
         juego.setVisible(true);
     }
+
+
 }
