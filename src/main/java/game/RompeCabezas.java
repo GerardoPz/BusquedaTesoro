@@ -2,15 +2,20 @@ package game;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Collections;
+import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class RompeCabezas extends JFrame {
     private JLabel[][] piezas = new JLabel[5][5];
-    private String[] imagenes = new String[25];
-    private ArrayList<String> listaImagenes;
+    private String[] imagenes = {
+            "fila-1-columna-1.png", "fila-1-columna-2.png", "fila-1-columna-3.png", "fila-1-columna-4.png", "fila-1-columna-5.png",
+            "fila-2-columna-1.png", "fila-2-columna-2.png", "fila-2-columna-3.png", "fila-2-columna-4.png", "fila-2-columna-5.png",
+            "fila-3-columna-1.png", "fila-3-columna-2.png", "fila-3-columna-3.png", "fila-3-columna-4.png", "fila-3-columna-5.png",
+            "fila-4-columna-1.png", "fila-4-columna-2.png", "fila-4-columna-3.png", "fila-4-columna-4.png", "fila-4-columna-5.png",
+            "fila-5-columna-1.png", "fila-5-columna-2.png", "fila-5-columna-3.png", "fila-5-columna-4.png", "fila-5-columna-5.png",
+    };
     private JLabel vacio;
     private Temporizador temporizador;
 
@@ -20,28 +25,22 @@ public class RompeCabezas extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new GridLayout(5, 5));
 
-        listaImagenes = new ArrayList<>();
-        for (int i = 0; i < 24; i++) {
-            imagenes[i] = "imagenes/imagenesRC/img" + (i + 1) + ".png";
-            listaImagenes.add(imagenes[i]);
-        }
-        imagenes[24] = null; // Espacio vacío sin imagen
-        listaImagenes.add(null);
-
-        Collections.shuffle(listaImagenes);
+        List<String> listaImagenes = obtenerImagenes();
+        int index = 0;
 
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
-                if (listaImagenes.get(i * 5 + j) != null) {
-                    piezas[i][j] = new JLabel(escalarImagen(listaImagenes.get(i * 5 + j), 80, 80));
-                    piezas[i][j].setName(listaImagenes.get(i * 5 + j));
+                if (index < listaImagenes.size() - 1) {
+                    piezas[i][j] = new JLabel(escalarImagen(listaImagenes.get(index), 200, 200));
+                    piezas[i][j].setName(listaImagenes.get(index));
                 } else {
-                    piezas[i][j] = new JLabel(); // Espacio vacío
+                    piezas[i][j] = new JLabel();
                     piezas[i][j].setName("vacio");
                     vacio = piezas[i][j];
                 }
                 piezas[i][j].addMouseListener(new MovimientoListener(i, j));
                 add(piezas[i][j]);
+                index++;
             }
         }
 
@@ -49,7 +48,17 @@ public class RompeCabezas extends JFrame {
         temporizador.iniciar();
     }
 
-    private class MovimientoListener extends java.awt.event.MouseAdapter {
+    private List<String> obtenerImagenes() {
+        List<String> lista = new ArrayList<>();
+        for (int i = 0; i < imagenes.length; i++) {
+            lista.add(imagenes[i]);
+        }
+        lista.add(null);
+        Collections.shuffle(lista);
+        return lista;
+    }
+
+    private class MovimientoListener extends MouseAdapter {
         int fila, columna;
 
         public MovimientoListener(int fila, int columna) {
@@ -58,7 +67,7 @@ public class RompeCabezas extends JFrame {
         }
 
         @Override
-        public void mouseClicked(java.awt.event.MouseEvent e) {
+        public void mouseClicked(MouseEvent e) {
             moverFicha(fila, columna);
             verificarVictoria();
         }
@@ -67,8 +76,11 @@ public class RompeCabezas extends JFrame {
     private void moverFicha(int fila, int columna) {
         int[] dr = {-1, 1, 0, 0};
         int[] dc = {0, 0, -1, 1};
+
         for (int i = 0; i < 4; i++) {
-            int nuevaFila = fila + dr[i], nuevaColumna = columna + dc[i];
+            int nuevaFila = fila + dr[i];
+            int nuevaColumna = columna + dc[i];
+
             if (esValido(nuevaFila, nuevaColumna) && piezas[nuevaFila][nuevaColumna] == vacio) {
                 vacio.setIcon(piezas[fila][columna].getIcon());
                 vacio.setName(piezas[fila][columna].getName());
@@ -85,16 +97,17 @@ public class RompeCabezas extends JFrame {
     }
 
     private void verificarVictoria() {
-        int contador = 1;
+        int contador = 0;
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
-                if (contador < 25 && !piezas[i][j].getName().equals("imagenes/imagenesRC" + contador + ".png")) {
+                contador++;
+                if (contador < 25 && piezas[i][j].getName() != null
+                        && !piezas[i][j].getName().equals(imagenes[contador - 1])) {
                     return;
                 }
-                contador++;
             }
         }
-        JOptionPane.showMessageDialog(this, "¡Ganaste!");
+        JOptionPane.showMessageDialog(this, "¡Felicidades! Has completado el rompecabezas.");
         temporizador.detener();
     }
 
@@ -109,7 +122,29 @@ public class RompeCabezas extends JFrame {
         System.exit(0);
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new RompeCabezas(60).setVisible(true));
+    //METODO QUE CREA PARA CREAR EL PANEL CON EL ROMPECABEZAS
+    private JPanel crearPanelRompecabezas() {
+        JPanel panel = new JPanel(new GridLayout(5, 5));
+        List<String> listaImagenes = obtenerImagenes();
+        int index = 0;
+
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                if (index < listaImagenes.size() - 1) {
+                    piezas[i][j] = new JLabel(escalarImagen(listaImagenes.get(index), 200, 200));
+                    piezas[i][j].setName(listaImagenes.get(index));
+                } else {
+                    piezas[i][j] = new JLabel();
+                    piezas[i][j].setName("vacio");
+                    vacio = piezas[i][j];
+                }
+                piezas[i][j].addMouseListener(new MovimientoListener(i, j));
+                panel.add(piezas[i][j]);
+                index++;
+            }
+        }
+
+        return panel;
     }
+
 }
