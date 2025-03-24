@@ -2,11 +2,20 @@ package game;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.nio.file.Paths;
+import java.time.LocalTime;
+import java.util.TimerTask;
 
 public class VistaInicio extends JFrame {
     private String ruta = ruta();
     Musica musica = new Musica(ruta + "\\src\\main\\java\\audios\\instrumental.wav");
+    private JPanel backgroundPanel;
+    private ImageIcon fondoDia, fondoNoche;
+    private Image imagenActual;
+    private Timer timer;
+
 
     public VistaInicio() {
         setTitle("Juego");
@@ -15,15 +24,17 @@ public class VistaInicio extends JFrame {
         setSize(700, 500);
         musica.start();
 
-        String rutaImagen = ruta + "\\src\\main\\java\\fondosJuego\\fondoDia.jpg";
-        ImageIcon imageIcon = new ImageIcon(rutaImagen);
-        Image image = imageIcon.getImage().getScaledInstance(1000, 1000, Image.SCALE_SMOOTH);
+        fondoDia = new ImageIcon(ruta + "\\src\\main\\java\\fondosJuego\\fondoDia.jpg");
+        fondoNoche = new ImageIcon(ruta + "\\src\\main\\java\\fondosJuego\\fondoNocheCorrecto.jpg");
 
-        JPanel backgroundPanel = new JPanel() {
+
+        imagenActual = esDeDia() ? fondoDia.getImage() : fondoNoche.getImage();
+
+        backgroundPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+                g.drawImage(imagenActual, 0, 0, getWidth(), getHeight(), this);
             }
         };
         backgroundPanel.setLayout(new BorderLayout());
@@ -88,11 +99,35 @@ public class VistaInicio extends JFrame {
         backgroundPanel.add(centerPanel, BorderLayout.SOUTH);
         setContentPane(backgroundPanel);
         setVisible(true);
+
+        iniciarCambioDeFondo();
+
     }
 
     public static String ruta() {
         String rutaActual = System.getProperty("user.dir");
         return String.valueOf(Paths.get(rutaActual));
+    }
+
+    public static boolean esDeDia() {
+        int hora = LocalTime.now().getHour();
+        return hora >= 6 && hora < 18; // Día entre 6 AM y 5:59 PM
+    }
+
+    private void iniciarCambioDeFondo() {
+        timer = new Timer(60000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                boolean esDeDia = esDeDia();
+                Image nuevaImagen = esDeDia ? fondoDia.getImage() : fondoNoche.getImage();
+
+                if (imagenActual != nuevaImagen) {
+                    imagenActual = nuevaImagen;
+                    repaint();
+                }
+            }
+        });
+        timer.start();
     }
 
     public static void main(String[] args) {
